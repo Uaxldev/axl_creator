@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXL Creator</title>
+
+    <link rel="stylesheet" href="css/00-tokens.css">
+    <link rel="stylesheet" href="css/10-base.css">
+    <link rel="stylesheet" href="css/20-components.css">
+    <link rel="stylesheet" href="css/30-screens.css">
+</head>
+<body class="bloqueada">
+
+    <!--
+        AXL Creator — telas da criação de personagem.
+        Cada tela é uma <section data-tela="...">; o js/app.js mostra a da vez.
+        Os data-tela e os id= são contrato com o JS — não renomear.
+    -->
+
+    <div id="app">
+
+        <!-- Área livre: arrastar gira o personagem, a roda do mouse aproxima. -->
+        <div id="palco"></div>
+
+        <div class="moldura" aria-hidden="true">
+            <span class="canto canto-se"></span>
+            <span class="canto canto-sd"></span>
+            <span class="canto canto-ie"></span>
+            <span class="canto canto-id"></span>
+        </div>
+
+        <!-- Tela vazia: fica assim enquanto o personagem carrega. -->
+        <section data-tela="hidden" hidden></section>
+
+        <!-- Abertura -->
+        <section data-tela="transition" class="tela-transicao" hidden>
+            <div class="transicao-conteudo">
+                <span class="rotulo-secao" id="tr-tag"></span>
+                <p class="transicao-pequeno" id="tr-pequeno"></p>
+                <h1 class="titulo-grande" id="tr-titulo"></h1>
+                <p class="transicao-msg" id="tr-msg"></p>
+                <div class="transicao-barra"><span id="tr-progresso"></span></div>
+            </div>
+        </section>
+
+        <!-- Etapa 1 · Aparência -->
+        <section data-tela="face" class="tela-criacao" hidden>
+            <div class="painel painel-controles">
+                <header class="painel-topo">
+                    <span class="rotulo-secao" data-etapa="face"></span>
+                    <h2 class="painel-titulo" id="face-titulo"></h2>
+                    <p class="painel-sub" id="face-sub"></p>
+                </header>
+                <nav class="abas" id="face-abas"></nav>
+                <div class="painel-corpo" id="face-corpo"></div>
+                <footer class="painel-rodape" id="face-rodape"></footer>
+            </div>
+        </section>
+
+        <!-- Etapa 2 · Cabelo e detalhes -->
+        <section data-tela="head" class="tela-criacao" hidden>
+            <div class="painel painel-controles">
+                <header class="painel-topo">
+                    <span class="rotulo-secao" data-etapa="head"></span>
+                    <h2 class="painel-titulo" id="head-titulo"></h2>
+                    <p class="painel-sub" id="head-sub"></p>
+                </header>
+                <nav class="abas" id="head-abas"></nav>
+                <div class="painel-corpo" id="head-corpo"></div>
+                <footer class="painel-rodape" id="head-rodape"></footer>
+            </div>
+        </section>
+
+        <!-- Etapa 3 · Identidade -->
+        <section data-tela="confirm" class="tela-criacao" hidden>
+            <div class="painel painel-controles">
+                <header class="painel-topo">
+                    <span class="rotulo-secao" data-etapa="confirm"></span>
+                    <h2 class="painel-titulo" id="confirm-titulo"></h2>
+                    <p class="painel-sub" id="confirm-sub"></p>
+                </header>
+                <div class="painel-corpo" id="confirm-corpo"></div>
+                <footer class="painel-rodape" id="confirm-rodape"></footer>
+            </div>
+        </section>
+
+        <!-- Etapa 4 · Whitelist -->
+        <section data-tela="whitelist" class="tela-whitelist" hidden>
+            <!-- Fundo da whitelist: imagem, vídeo ou cenário do jogo, definido no config. -->
+            <div class="wl-fundo" id="wl-fundo"></div>
+            <div class="painel painel-wl">
+                <header class="painel-topo">
+                    <span class="rotulo-secao" data-etapa="whitelist"></span>
+                    <h2 class="painel-titulo" id="wl-titulo"></h2>
+                </header>
+                <div class="painel-corpo" id="wl-corpo"></div>
+                <footer class="painel-rodape" id="wl-rodape"></footer>
+            </div>
+        </section>
+
+        <!-- Coluna da esquerda: progresso das etapas e ficha do personagem. -->
+        <aside class="lateral" id="lateral" hidden>
+            <div class="lateral-marca" id="lateral-marca"></div>
+            <ol class="linha-etapas" id="linha-etapas"></ol>
+            <div class="ficha" id="ficha"></div>
+            <button class="btn btn-fantasma" id="btn-aleatorio" type="button"></button>
+        </aside>
+
+    </div>
+
+    <!-- Avisos: ficam fora do #app pra aparecer mesmo com a interface travada. -->
+    <div id="avisos" class="avisos"></div>
+
+    <script src="js/nui.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/character.js"></script>
+    <script src="js/icons.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/chrome.js"></script>
+    <script src="js/screens.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

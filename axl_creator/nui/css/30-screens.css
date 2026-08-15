@@ -1,0 +1,249 @@
+/* =====================================================================
+   AXL Creator — telas de criação, whitelist e transição.
+   ===================================================================== */
+
+[data-tela] {
+    position: absolute;
+    inset: 0;
+}
+
+/* Precisa do !important pra vencer o display:flex das telas. */
+[hidden] {
+    display: none !important;
+}
+
+/* ----- Etapas 1 a 3 ----- */
+.tela-criacao {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 2.5rem;
+    /* Escurece só a faixa da direita, atrás do painel. */
+    background: linear-gradient(270deg,
+                rgb(0 0 0 / .72) 0%,
+                rgb(0 0 0 / .35) 26%,
+                rgb(0 0 0 / 0) 52%);
+    /* A tela cobre tudo: sem isto o mouse nunca chega no #palco. */
+    pointer-events: none;
+}
+
+.painel-controles {
+    width: clamp(21rem, 30vw, 34rem);
+    height: min(88vh, 46rem);
+    pointer-events: auto;
+}
+
+/* ----- Whitelist e abertura ----- */
+.tela-whitelist {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgb(0 0 0 / .55);
+}
+
+/* Fundo opcional da última etapa (imagem ou vídeo), escurecido por cima. */
+.wl-fundo {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+.wl-fundo video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.wl-fundo.com-midia::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / .55);
+}
+
+.painel-wl {
+    width: clamp(22rem, 34vw, 36rem);
+    max-height: 88vh;
+}
+
+.tela-transicao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgb(0 0 0 / .82);
+}
+
+.transicao-conteudo {
+    text-align: center;
+    max-width: 34rem;
+    padding: 2rem;
+    animation: painel-entra var(--t-lento) var(--easing) both;
+}
+
+.transicao-pequeno {
+    margin: 0 0 .4rem;
+    font-size: .72rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: rgb(var(--c-text-mid));
+}
+
+.transicao-msg {
+    margin: 1rem 0 1.6rem;
+    font-size: .9rem;
+    color: rgb(var(--c-text-mid));
+    min-height: 1.4em;
+}
+
+.transicao-barra {
+    height: .22rem;
+    border-radius: 999px;
+    background: rgb(var(--c-border) / .1);
+    overflow: hidden;
+}
+.transicao-barra span {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: rgb(var(--c-accent));
+    box-shadow: 0 0 .7rem rgb(var(--c-accent) / .7);
+    transition: width var(--t-medio) linear;
+}
+
+/* ----- Coluna da esquerda ----- */
+.lateral {
+    position: fixed;
+    left: 2.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: clamp(11rem, 15vw, 15rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 15;
+    animation: lateral-entra var(--t-lento) var(--easing) both;
+}
+
+@keyframes lateral-entra {
+    from { opacity: 0; transform: translate(-1rem, -50%); }
+    to   { opacity: 1; transform: translate(0, -50%); }
+}
+
+.lateral-marca {
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -.01em;
+    color: rgb(var(--c-text-hi));
+    line-height: 1.15;
+}
+.lateral-marca small {
+    display: block;
+    margin-top: .15rem;
+    font-size: .62rem;
+    font-weight: 600;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: rgb(var(--c-accent));
+}
+
+/* ----- progresso das etapas ----- */
+.linha-etapas {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .1rem;
+}
+
+.etapa {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .45rem 0;
+    font-size: .78rem;
+    color: rgb(var(--c-text-hi));
+    transition: color var(--t-rapido) ease;
+}
+
+.etapa-bola {
+    position: relative;
+    width: 1.35rem;
+    height: 1.35rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 1px solid rgb(var(--c-border) / .18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .6rem;
+    font-weight: 700;
+    transition: background var(--t-rapido) ease, border-color var(--t-rapido) ease;
+}
+
+/* A linha que liga uma bolinha na outra. */
+.etapa:not(:last-child) .etapa-bola::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 1px;
+    height: .95rem;
+    transform: translateX(-50%);
+    background: rgb(var(--c-border) / .14);
+}
+
+.etapa.feita .etapa-bola {
+    background: rgb(var(--c-menu-ativo) / .18);
+    border-color: rgb(var(--c-menu-ativo) / .5);
+    color: rgb(var(--c-menu-ativo));
+}
+.etapa.feita .etapa-bola::after { background: rgb(var(--c-menu-ativo) / .4); }
+
+.etapa.atual { color: rgb(var(--c-menu-ativo)); font-weight: 700; }
+.etapa.atual .etapa-bola {
+    background: rgb(var(--c-menu-ativo));
+    border-color: rgb(var(--c-menu-ativo));
+    color: rgb(var(--c-bg-deep));
+    box-shadow: 0 0 .7rem rgb(var(--c-menu-ativo) / .55);
+}
+
+/* ----- ficha do personagem ----- */
+.ficha {
+    padding: .8rem;
+    border-radius: var(--raio);
+    background: rgb(var(--c-bg-card) / .8);
+    border: 1px solid rgb(var(--c-border) / .07);
+}
+
+.ficha-linha {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: .5rem;
+    padding: .2rem 0;
+    font-size: .74rem;
+}
+.ficha-linha dt { color: rgb(var(--c-text-mid)); margin: 0; }
+.ficha-linha dd {
+    margin: 0;
+    font-weight: 700;
+    color: rgb(var(--c-text-hi));
+    font-variant-numeric: tabular-nums;
+}
+
+/* A coluna da esquerda só existe durante a criação. */
+body:not(.em-criacao) #lateral { display: none; }
+
+/* ----- Aleatorizar ----- */
+#btn-aleatorio {
+    color: rgb(var(--c-text-hi));
+    border-color: rgb(var(--c-border) / .12);
+}
+#btn-aleatorio:hover {
+    color: rgb(var(--c-menu-ativo));
+    border-color: rgb(var(--c-menu-ativo) / .5);
+    background: rgb(var(--c-menu-ativo) / .1);
+}

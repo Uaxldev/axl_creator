@@ -1,0 +1,331 @@
+/* AXL Creator — componentes reutilizáveis: avisos, abas, campos, controles, cards e modal. */
+
+/* Avisos (toast) — ficam fora do #app pra aparecer mesmo com a interface travada. */
+/* Sem backdrop-filter: no navegador do FiveM ele vira um retângulo preto. */
+.avisos {
+    position: fixed;
+    top: 1.6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    z-index: 60;
+    pointer-events: none;
+}
+
+.aviso {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    min-width: 16rem;
+    max-width: 30rem;
+    padding: .7rem 1rem;
+    border-radius: var(--raio);
+    background: rgb(var(--c-bg-card) / .96);
+    border: 1px solid rgb(var(--c-border) / .1);
+    border-left: 3px solid rgb(var(--c-accent));
+    box-shadow: 0 .6rem 2rem rgb(0 0 0 / .55);
+    font-size: .82rem;
+    color: rgb(var(--c-text-hi));
+    animation: aviso-entra var(--t-medio) var(--easing) both;
+}
+.aviso.saindo { animation: aviso-sai 200ms ease forwards; }
+
+.aviso-sucesso    { border-left-color: rgb(var(--c-ok)); }
+.aviso-negado     { border-left-color: rgb(var(--c-danger)); }
+.aviso-alerta     { border-left-color: rgb(var(--c-warn)); }
+.aviso-importante,
+.aviso-info       { border-left-color: rgb(var(--c-accent)); }
+
+.aviso svg { width: 1.1rem; height: 1.1rem; flex-shrink: 0; }
+.aviso-sucesso svg { color: rgb(var(--c-ok)); }
+.aviso-negado  svg { color: rgb(var(--c-danger)); }
+.aviso-alerta  svg { color: rgb(var(--c-warn)); }
+.aviso-importante svg,
+.aviso-info    svg { color: rgb(var(--c-accent)); }
+
+@keyframes aviso-entra {
+    from { opacity: 0; transform: translateY(-.8rem); }
+    to   { opacity: 1; transform: none; }
+}
+@keyframes aviso-sai {
+    to { opacity: 0; transform: translateY(-.5rem); }
+}
+
+/* Área livre: arrastar gira o personagem, roda do mouse dá zoom. */
+/* Tem que ser o primeiro filho do #app, senão cobre os painéis e mata os cliques. */
+#palco {
+    position: absolute;
+    inset: 0;
+    cursor: grab;
+}
+#palco.arrastando { cursor: grabbing; }
+#palco.orbitando  { cursor: move; }
+
+/* Abas */
+.abas {
+    display: flex;
+    gap: .3rem;
+    padding: .55rem 1.3rem 0;
+    flex-shrink: 0;
+}
+
+.aba {
+    flex: 1;
+    height: 2.1rem;
+    border-radius: var(--raio-sm) var(--raio-sm) 0 0;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: rgb(var(--c-text-mid));
+    border-bottom: 2px solid transparent;
+    transition: color var(--t-rapido) ease,
+                background var(--t-rapido) ease,
+                border-color var(--t-rapido) ease;
+}
+.aba:hover { color: rgb(var(--c-text-hi)); background: rgb(var(--c-accent) / .08); }
+.aba.ativa {
+    color: rgb(var(--c-text-hi));
+    background: rgb(var(--c-accent) / .12);
+    border-bottom-color: rgb(var(--c-accent));
+}
+
+/* Campo de texto */
+.campo {
+    width: 100%;
+    height: 2.5rem;
+    padding: 0 .8rem;
+    border-radius: var(--raio-sm);
+    background: rgb(var(--c-bg-deep) / .7);
+    border: 1px solid rgb(var(--c-border) / .1);
+    color: rgb(var(--c-text-hi));
+    font-size: .85rem;
+    transition: border-color var(--t-rapido) ease, background var(--t-rapido) ease;
+}
+.campo::placeholder { color: rgb(var(--c-text-lo)); }
+.campo:focus {
+    border-color: rgb(var(--c-accent) / .6);
+    background: rgb(var(--c-bg-deep) / .9);
+}
+.campo.invalido { border-color: rgb(var(--c-danger) / .6); }
+
+.erro-campo {
+    display: block;
+    margin-top: .3rem;
+    font-size: .7rem;
+    color: rgb(var(--c-danger));
+}
+
+/* Controles */
+.controle { margin-bottom: .85rem; }
+
+.controle-topo {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: .5rem;
+    margin-bottom: .35rem;
+}
+
+.controle-rotulo {
+    font-size: .76rem;
+    color: rgb(var(--c-text-hi));
+}
+
+.controle-valor {
+    font-size: .68rem;
+    font-weight: 700;
+    color: rgb(var(--c-accent));
+    font-variant-numeric: tabular-nums;
+}
+
+/* ----- dial ----- */
+.dial-trilho {
+    position: relative;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    cursor: ew-resize;
+}
+.dial-trilho::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: .3rem;
+    border-radius: 999px;
+    background: rgb(var(--c-border) / .1);
+}
+.dial-preenchido {
+    position: absolute;
+    height: .3rem;
+    border-radius: 999px;
+    background: rgb(var(--c-accent));
+    pointer-events: none;
+}
+/* Risco do centro: marca o zero nos traços que vão pros dois lados. */
+.dial-meio {
+    position: absolute;
+    left: 50%;
+    width: 1px;
+    height: .7rem;
+    background: rgb(var(--c-border) / .3);
+    pointer-events: none;
+}
+.dial-pino {
+    position: absolute;
+    width: .85rem;
+    height: .85rem;
+    border-radius: 50%;
+    background: rgb(var(--c-accent));
+    box-shadow: 0 0 .5rem rgb(var(--c-accent) / .7);
+    transform: translateX(-50%);
+    pointer-events: none;
+    transition: transform var(--t-rapido) ease;
+}
+.dial-trilho:hover .dial-pino,
+.dial-trilho.arrastando .dial-pino { transform: translateX(-50%) scale(1.2); }
+
+/* ----- stepper ----- */
+.stepper {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+}
+.stepper-seta {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+}
+.stepper-seta svg { width: .9rem; height: .9rem; }
+
+.stepper-visor {
+    flex: 1;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--raio-sm);
+    background: rgb(var(--c-bg-deep) / .75);
+    border: 1px solid rgb(var(--c-accent) / .25);
+    font-size: .95rem;
+    font-weight: 700;
+    color: rgb(var(--c-text-hi));
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 .5rem rgb(var(--c-accent) / .5);
+}
+
+.stepper-barra {
+    height: .18rem;
+    margin-top: .35rem;
+    border-radius: 999px;
+    background: rgb(var(--c-border) / .1);
+    overflow: hidden;
+}
+.stepper-barra span {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: rgb(var(--c-accent) / .8);
+    transition: width var(--t-rapido) ease;
+}
+
+/* ----- grupo de traços ----- */
+.grupo {
+    margin-bottom: 1.1rem;
+}
+.grupo-titulo {
+    display: block;
+    font-size: .64rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgb(var(--c-accent));
+    margin-bottom: .55rem;
+    padding-bottom: .3rem;
+    border-bottom: 1px solid rgb(var(--c-border) / .06);
+}
+
+/* ----- escolha entre duas opções (gênero, mecha) ----- */
+.duplo {
+    display: flex;
+    gap: .4rem;
+    margin-bottom: .85rem;
+}
+.duplo .btn { flex: 1; }
+.duplo .btn.escolhido {
+    background: rgb(var(--c-accent) / .2);
+    border-color: rgb(var(--c-accent) / .6);
+    color: rgb(var(--c-text-hi));
+}
+
+/* ----- cards de veículo ----- */
+.carros {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+    gap: .5rem;
+}
+.carro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .4rem;
+    padding: .7rem .5rem;
+    cursor: pointer;
+    text-align: center;
+}
+.carro img {
+    width: 100%;
+    height: 3.2rem;
+    object-fit: contain;
+}
+.carro-generico {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3.2rem;
+    color: rgb(var(--c-text-lo));
+}
+.carro-nome {
+    font-size: .72rem;
+    font-weight: 600;
+    color: rgb(var(--c-text-hi));
+}
+.carro-tipo {
+    font-size: .6rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgb(var(--c-text-mid));
+}
+
+/* Modal — fundo sólido: backdrop-filter no navegador do jogo vira retângulo preto. */
+.modal-fundo {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--overlay);
+    animation: aviso-entra var(--t-rapido) ease both;
+}
+
+.modal {
+    width: clamp(20rem, 30vw, 30rem);
+    padding: 1.4rem;
+    border-radius: var(--raio-lg);
+    background: linear-gradient(160deg, var(--painel) 0%, var(--painel-fundo) 100%);
+    border: 1px solid rgb(var(--c-accent) / .3);
+    box-shadow: 0 1.5rem 4rem rgb(0 0 0 / .75);
+    animation: painel-entra var(--t-medio) var(--easing) both;
+}
+
+.modal .campo { margin: .8rem 0 .5rem; }
+.modal .painel-titulo { margin-bottom: .4rem; }
+
+.modal-acoes {
+    display: flex;
+    gap: .5rem;
+    margin-top: 1rem;
+}
